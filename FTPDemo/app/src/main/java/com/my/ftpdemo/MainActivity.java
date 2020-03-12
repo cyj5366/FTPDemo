@@ -1,9 +1,13 @@
 package com.my.ftpdemo;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textView = findViewById(R.id.textView);
+        //申请SD卡存储权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
 
         String ip = getIp();
         if(TextUtils.isEmpty(ip)){
@@ -26,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
             String str = "请在IE浏览器上输入网址访问FTP服务\n" +
                     "ftp://"+ip+":2221\n" +
                     "账号:admin\n" +
-                    "密码:123456";
+                    "密码:123456\n"+
+                    "根目录:/sdcard/";
             textView.setText(str);
         }
 
